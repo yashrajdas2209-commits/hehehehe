@@ -4,89 +4,131 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title id="pageTitle">Be My Valentine? 💖</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+
   <style>
     * { box-sizing: border-box; }
+    
     body {
       margin: 0;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #ffb6c1, #ffc0cb);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(-45deg, #ffb6c1, #ffc0cb, #fbc2eb, #a18cd1);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      font-family: 'Dancing Script', cursive; 
       overflow: hidden;
-      transition: background 1.5s ease;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png');
+      opacity: 0.15;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .card {
       width: min(92vw, 420px);
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
       padding: 30px 20px;
       border-radius: 30px;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
       position: relative;
       z-index: 10;
     }
 
-    .btn-row { position: relative; height: 160px; margin-top: 10px; }
+    h1 { font-size: 2.8rem; color: #d63384; margin-bottom: 5px; }
+    p { font-size: 1.4rem; color: #444; font-weight: bold; margin-bottom: 20px; }
+
+    .btn-row { position: relative; height: 160px; margin-top: 20px; }
     .btn {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      padding: 15px 30px;
-      font-size: 1.1rem;
+      padding: 12px 30px;
+      font-size: 1.4rem;
+      font-family: 'Dancing Script', cursive;
+      font-weight: 700;
       border-radius: 50px;
       border: none;
       cursor: pointer;
       transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    #yesBtn { background: #ff4da6; color: white; z-index: 20; }
-    #noBtn { background: #eee; color: #555; top: 90px; z-index: 15; }
+    #yesBtn { background: #ff4da6; color: white; z-index: 20; box-shadow: 0 10px 20px rgba(255, 77, 166, 0.3); }
+    #noBtn { background: rgba(255,255,255,0.8); color: #555; top: 90px; z-index: 15; }
 
-    .result { display: none; }
     .photo-stack {
       position: relative;
       width: 280px;
-      height: 380px;
-      margin: 20px auto;
+      height: 360px;
+      margin: 10px auto;
       perspective: 1000px;
     }
+
     .stacked-photo {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
       object-fit: cover;
+      background-color: white;
       border: 10px solid white;
-      border-bottom: 40px solid white;
+      border-bottom: 45px solid white;
       border-radius: 4px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       cursor: pointer;
       transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.6s;
     }
-    .photo-exit { transform: translateY(-120vh) rotate(45deg) scale(0.5) !important; opacity: 0; pointer-events: none; }
+
+    /* Final photo stays put */
+    #foreverPhoto {
+      z-index: 1 !important;
+      pointer-events: none;
+      transform: rotate(-3deg);
+    }
+
+    .floating-item {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+      animation: floatUp 10s linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+    }
 
     .final-text {
       display: none;
-      font-family: 'Brush Script MT', cursive;
-      font-size: 2.3rem;
+      font-size: 2.5rem;
       color: #e60073;
       margin-top: 15px;
-      animation: heartBeat 1.2s infinite;
+      font-weight: bold;
+      text-shadow: 2px 2px 0px white;
     }
 
-    .rejection-joke { font-size: 0.8rem; color: #888; font-style: italic; margin-bottom: 10px; }
-    .tap-hint { font-size: 0.85rem; color: #ff4da6; margin-top: 10px; font-weight: bold; }
-
-    .lily { position: absolute; font-size: 3.5rem; animation: float 12s linear infinite; opacity: 0.6; z-index: 1; pointer-events: none; }
+    .rejection-joke { font-size: 1.1rem; color: #d63384; margin-bottom: 10px; }
     .heart-trail { position: fixed; font-size: 1.5rem; pointer-events: none; z-index: 9999; animation: heartFade 1s forwards; }
-    
-    @keyframes float {
-      0% { transform: translateY(110vh) rotate(0deg) scale(0.8); opacity: 0; }
-      20%, 80% { opacity: 0.6; }
-      100% { transform: translateY(-20vh) rotate(360deg) scale(1.2); opacity: 0; }
-    }
     @keyframes heartFade { 0% { opacity: 1; transform: translate(-50%,-50%) scale(0.5); } 100% { opacity: 0; transform: translate(-50%,-150%) scale(1.5); } }
-    @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
   </style>
 </head>
 <body>
@@ -95,7 +137,7 @@
 
   <div class="card">
     <div id="askInterface">
-      <h1>Will you be my Valentine? 🌸</h1>
+      <h1>Be My Valentine? 🌸</h1>
       <p>shaadi ke liye propose me when?🙃</p>
       <div class="btn-row" id="playArea">
         <button class="btn" id="yesBtn">Yes 💖</button>
@@ -103,105 +145,135 @@
       </div>
     </div>
 
-    <div class="result" id="resultInterface">
+    <div class="result" id="resultInterface" style="display:none;">
       <div id="rejectionMsg" class="rejection-joke"></div>
-      <div class="photo-stack">
-        <video id="finalVid" class="stacked-photo" playsinline><source src="final_video.mp4" type="video/mp4"></video>
-        <img src="9.jpeg" class="stacked-photo" style="transform: rotate(3deg)">
-        <img src="8.jpeg" class="stacked-photo" style="transform: rotate(-3deg)">
-        <img src="7.jpeg" class="stacked-photo" style="transform: rotate(2deg)">
-        <img src="6.jpeg" class="stacked-photo" style="transform: rotate(-5deg)">
-        <img src="5.jpeg" class="stacked-photo" style="transform: rotate(4deg)">
-        <img src="4.jpeg" class="stacked-photo" style="transform: rotate(-2deg)">
-        <img src="3.jpeg" class="stacked-photo" style="transform: rotate(3deg)">
-        <img src="2.jpeg" class="stacked-photo" style="transform: rotate(-4deg)">
-        <img src="1.jpeg" class="stacked-photo" style="transform: rotate(2deg)">
-      </div>
-      <p id="tapHint" class="tap-hint">finger kro phone ☝️ ...</p>
-      <div id="finalMessage" class="final-text">I LOVE YOU MOREEEE moreee moreee 💖</div>
+      <div class="photo-stack" id="stack">
+        <img src="forever.jpeg" id="foreverPhoto" class="stacked-photo">
+        
+        <video id="finalVid" class="stacked-photo" playsinline muted loop><source src="final_video.mp4" type="video/mp4"></video>
+        <img src="9.jpeg" class="stacked-photo">
+        <img src="8.jpeg" class="stacked-photo">
+        <img src="7.jpeg" class="stacked-photo">
+        <img src="6.jpeg" class="stacked-photo">
+        <img src="5.jpeg" class="stacked-photo">
+        <img src="4.jpeg" class="stacked-photo">
+        <img src="3.jpeg" class="stacked-photo">
+        <img src="2.jpeg" class="stacked-photo">
+        <img src="1.jpeg" class="stacked-photo">
+        </div>
+      <p id="tapHint" style="color: #ff4da6; font-size: 1.2rem; font-weight: bold;">finger kro☝️</p>
+      <div id="finalMessage" class="final-text">I LOVE YOU SO MUCH MOREEEE moreee moreeeeee x INFINITYYYY! 💖</div>
     </div>
   </div>
-
-  <span class="lily" style="left: 10%; animation-delay: 0s;">🌸</span>
-  <span class="lily" style="left: 40%; animation-delay: 4s;">⚜️</span>
-  <span class="lily" style="left: 70%; animation-delay: 2s;">🌸</span>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <script>
     let noCount = 0;
-    const phrases = ["sacchi?🙄", "You no love me😔", "Really?🥺", "Last time😠", "Nice try! 🏃‍♂️", "Just click Yes! ❤️"];
-    const colors = ["#ffb6c1", "#ff9a9e", "#fecfef", "#ffecd2", "#fcb69f", "#a18cd1", "#fbc2eb", "#84fab0", "#ff9a9e"];
-    
+    const phrases = ["Sacchi?🙄", "You no love me, haw one sided love😔", "Really?🥺", "Last time😠", "pagal yashrajpagluu! 🏃‍♂️", "DIVORCE?!🤨"];
     const noBtn = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
     const bgm = document.getElementById('bgm');
     const finalVid = document.getElementById('finalVid');
-    const pageTitle = document.getElementById('pageTitle');
+    const items = document.querySelectorAll('.stacked-photo');
 
-    const unlock = () => { bgm.play().catch(()=>{}); finalVid.load(); };
+    // 1. Scattering the photos on load
+    items.forEach((item, index) => {
+      if(item.id !== 'foreverPhoto') {
+        const randomRot = (Math.random() - 0.5) * 15;
+        const randomX = (Math.random() - 0.5) * 20;
+        item.style.transform = `rotate(${randomRot}deg) translate(${randomX}px)`;
+        
+        // FIX: The higher the HTML index, the higher the Z-index (so 1.jpeg is on top)
+        item.style.zIndex = index + 2; 
+      }
+    });
 
-    function moveNo() {
+    // 2. No Button Logic (Hover + Mobile Touch)
+    function moveNo(e) {
+      if(e) e.preventDefault();
+      bgm.play().catch(() => {}); 
       noCount++;
-      unlock();
-      const phraseIndex = Math.min(noCount - 1, phrases.length - 1);
-      noBtn.innerText = phrases[phraseIndex];
+      noBtn.innerText = phrases[Math.min(noCount - 1, phrases.length - 1)];
       const x = Math.random() * (document.getElementById('playArea').offsetWidth - noBtn.offsetWidth);
       const y = Math.random() * (document.getElementById('playArea').offsetHeight - noBtn.offsetHeight);
-      noBtn.style.left = x + 'px'; noBtn.style.top = y + 'px';
+      noBtn.style.left = x + 'px'; 
+      noBtn.style.top = y + 'px';
       yesBtn.style.transform = `translateX(-50%) scale(${1 + noCount * 0.15})`;
     }
-    
-    noBtn.addEventListener('mouseenter', moveNo);
-    noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNo(); });
 
+    noBtn.addEventListener('mouseenter', moveNo);
+    noBtn.addEventListener('touchstart', moveNo);
+
+    // 3. Floating Decor
+    function createDecor() {
+      const symbols = ['🌸', '✨', '🌷', '🤍', '🌼'];
+      const item = document.createElement('div');
+      item.className = 'floating-item';
+      item.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+      item.style.left = Math.random() * 100 + 'vw';
+      item.style.fontSize = (Math.random() * 20 + 20) + 'px';
+      document.body.appendChild(item);
+      setTimeout(() => item.remove(), 10000);
+    }
+    setInterval(createDecor, 500);
+
+    // 4. Yes Button Click
     yesBtn.addEventListener('click', () => {
-      unlock();
+      bgm.play().catch(()=>{}); 
       document.getElementById('askInterface').style.display = 'none';
       document.getElementById('resultInterface').style.display = 'block';
-      pageTitle.innerText = "SHE SAID YES! 🎉";
       
       if(noCount > 0) {
-        document.getElementById('rejectionMsg').innerText = `It took you ${noCount} tries to say yes, me is sad  😔, but I'll take your fat nice yummy ass! 🍑😘`;
+        document.getElementById('rejectionMsg').innerText = `It took you ${noCount} tries... me sadd😔 but ILL HAVE UR SEXY FAT ASSS!😋😘`;
       }
 
-      const items = document.querySelectorAll('.stacked-photo');
       let removed = 0;
-      items.forEach((item) => {
-        if(item.tagName === 'IMG') {
+      
+      // FIX: Reverse the array so we process from 1.jpeg (Top) down to Video (Bottom)
+      const peelableItems = Array.from(items).filter(i => i.id !== 'foreverPhoto').reverse();
+
+      peelableItems.forEach((item) => {
           item.addEventListener('click', () => {
-            item.classList.add('photo-exit');
-            removed++;
-            document.body.style.background = colors[removed % colors.length];
-            confetti({ particleCount: 30, spread: 50, shapes: ['star'], colors:['#FFD700', '#FF69B4'] });
+            // Animation: Fly away
+            const side = Math.random() > 0.5 ? 1 : -1;
+            item.style.transform = `translate(${side * 500}px, -120vh) rotate(${side * 90}deg)`;
+            item.style.opacity = '0';
+            item.style.pointerEvents = 'none';
             
-            // Trigger video after all 9 photos are gone
-            if(removed === 9) {
-              finalVid.play();
-              document.getElementById('tapHint').innerText = "BEST one ❤️";
-              finalVid.addEventListener('click', () => {
-                finalVid.classList.add('photo-exit');
+            removed++;
+            confetti({ particleCount: 20, spread: 60 });
+
+            // Video logic
+            if(item.id === 'finalVid') {
+              document.getElementById('tapHint').innerText = "BEST ONE... ❤️";
+            } else if (removed < peelableItems.length) {
+              // Check the NEXT item in the reversed array
+              const nextIdx = peelableItems.indexOf(item) + 1;
+              if(peelableItems[nextIdx] && peelableItems[nextIdx].id === 'finalVid') {
+                peelableItems[nextIdx].play();
+              }
+            }
+            
+            // Final Reveal (When only foreverPhoto is left)
+            if(removed === peelableItems.length) {
                 document.getElementById('finalMessage').style.display = 'block';
                 document.getElementById('tapHint').style.display = 'none';
-                pageTitle.innerText = "I LOVE YOU SO MUCHHHH MOREEEE PFAKEEEEEE💖";
-                confetti({ particleCount: 300, spread: 100 });
-              }, {once: true});
+                confetti({ particleCount: 200, spread: 90, origin: { y: 0.7 } });
             }
           });
-        }
       });
     });
 
-    document.addEventListener('mousemove', (e) => spawnHeart(e.pageX, e.pageY));
-    document.addEventListener('touchmove', (e) => spawnHeart(e.touches[0].pageX, e.touches[0].pageY));
-    function spawnHeart(x, y) {
+    // Heart Trail for Mouse
+    document.addEventListener('mousemove', (e) => {
       if (Math.random() > 0.1) return;
       const h = document.createElement('div');
       h.className = 'heart-trail'; h.innerHTML = '❤️';
-      h.style.left = x + 'px'; h.style.top = y + 'px';
+      h.style.left = e.pageX + 'px'; h.style.top = e.pageY + 'px';
       document.body.appendChild(h);
       setTimeout(() => h.remove(), 1000);
-    }
+    });
   </script>
 </body>
 </html>
